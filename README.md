@@ -1,4 +1,4 @@
-## `segmentInsert`
+## `segmentioInsert`
 
 Load segment.io snippet on this page, given an apiToken as
 a string. This does the same thing as the official snippet,
@@ -12,7 +12,7 @@ https:// instead of matching the page's scheme.
 ### Examples
 
 ```js
-var segmentInsert = require('segment-insert')
+var segmentInsert = require('segmentio-insert')
 segmentInsert('my-api-token');
 ```
 

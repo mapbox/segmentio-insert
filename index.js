@@ -7,10 +7,10 @@
  * @param {string} apiToken
  * @returns {undefined}
  * @example
- * var segmentInsert = require('segment-insert')
- * segmentInsert('my-api-token');
+ * var segmentioInsert = require('segmentio-insert')
+ * segmentioInsert('my-api-token');
  */
-function segmentInsert(apiToken) {
+function segmentioInsert(apiToken) {
     var analytics = window.analytics = window.analytics || [];
     if (analytics.initialize) return;
 
@@ -57,4 +57,4 @@ function segmentInsert(apiToken) {
     analytics.page();
 }
 
-module.exports = segmentInsert;
+module.exports = segmentioInsert;
