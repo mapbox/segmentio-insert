@@ -55,6 +55,7 @@ function segmentioInsert(apiToken) {
     analytics.SNIPPET_VERSION = '3.0.1';
     analytics.load(apiToken);
     analytics.page();
+    return analytics;
 }
 
 module.exports = segmentioInsert;
