@@ -16,4 +16,4 @@ var segmentInsert = require('segmentio-insert')
 segmentInsert('my-api-token');
 ```
 
-Returns `undefined`
+Returns `analytics`
