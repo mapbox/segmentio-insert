@@ -34,6 +34,10 @@ function segmentioInsert(apiToken) {
             var e = Array.prototype.slice.call(arguments);
             e.unshift(t);
             analytics.push(e);
+            // call callback
+            if (typeof e[e.length - 1] === 'function') {
+              e[e.length - 1]();
+            }
             return analytics;
         };
     };
