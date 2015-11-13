@@ -25,9 +25,23 @@ function segmentioInsert(apiToken) {
 
     // Defer API calls so that they can be invoked _before_ the
     // actual code is loaded
-    analytics.methods = ['trackSubmit', 'trackClick', 'trackLink',
-      'trackForm', 'pageview', 'identify', 'group', 'track',
-      'ready', 'alias', 'page', 'once', 'off', 'on'];
+    analytics.methods = [
+      'trackSubmit',
+      'trackClick',
+      'trackLink',
+      'trackForm',
+      'pageview',
+      'identify',
+      'reset',
+      'group',
+      'track',
+      'ready',
+      'alias',
+      'page',
+      'once',
+      'off',
+      'on'
+    ];
 
     analytics.factory = function(t) {
         return function() {
@@ -56,7 +70,7 @@ function segmentioInsert(apiToken) {
         n.parentNode.insertBefore(e, n);
     };
 
-    analytics.SNIPPET_VERSION = '3.0.1';
+    analytics.SNIPPET_VERSION = '3.1.0';
     analytics.load(apiToken);
     analytics.page();
     return analytics;
