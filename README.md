@@ -12,7 +12,7 @@ https:// instead of matching the page's scheme.
 ### Examples
 
 ```js
-var segmentInsert = require('segmentio-insert')
+var segmentInsert = require('@mapbox/segmentio-insert')
 segmentInsert('my-api-token');
 ```
 
