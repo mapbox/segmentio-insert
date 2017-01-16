@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/segmentio-insert",
-  "version": "1.1.2",
+  "version": "4.0.0",
   "description": "insert segment.io script on a page",
   "main": "index.js",
   "scripts": {
@@ -18,8 +18,14 @@
     "url": "git@github.com:mapbox/segmentio-insert.git"
   },
   "devDependencies": {
-    "browserify": "^11.1.0",
+    "browserify": "^13.3.0",
+    "cz-conventional-changelog": "^1.2.0",
     "scat": "0.0.0",
     "tape": "^4.2.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

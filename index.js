@@ -1,79 +1,101 @@
 /**
- * Load segment.io snippet on this page, given an apiToken as
+ * Load segment.io snippet on this page, given a write token as
  * a string. This does the same thing as the official snippet,
- * but is designed for usage with browserify and hardcodes
+ * but is designed for usage with bundlers and hardcodes
  * https:// instead of matching the page's scheme.
  *
- * @param {string} apiToken
+ * @param {string} writeKey
  * @returns {undefined}
  * @example
  * var segmentioInsert = require('segmentio-insert')
- * segmentioInsert('my-api-token');
+ * segmentioInsert('my-write-key');
  */
-function segmentioInsert(apiToken) {
-    var analytics = window.analytics = window.analytics || [];
-    if (analytics.initialize) return;
+function segmentioInsert(writeKey) {
+  // Create a queue, but don't obliterate an existing one!
+  var analytics = window.analytics = window.analytics || [];
 
-    if (analytics.invoked) {
-      if (window.console && console.error) {
-        console.error('Segment snippet included twice.');
-      }
-      return;
+  // If the real analytics.js is already on the page return.
+  if (analytics.initialize)
+    return;
+
+  // If the snippet was invoked already show an error.
+  if (analytics.invoked) {
+    if (window.console && console.error) {
+      console.error("Segment snippet included twice.");
     }
+    return;
+  }
 
-    analytics.invoked = true;
+  // Invoked flag, to make sure the snippet
+  // is never invoked twice.
+  analytics.invoked = true;
 
-    // Defer API calls so that they can be invoked _before_ the
-    // actual code is loaded
-    analytics.methods = [
-      'trackSubmit',
-      'trackClick',
-      'trackLink',
-      'trackForm',
-      'pageview',
-      'identify',
-      'reset',
-      'group',
-      'track',
-      'ready',
-      'alias',
-      'page',
-      'once',
-      'off',
-      'on'
-    ];
+  // A list of the methods in Analytics.js to stub.
+  analytics.methods = [
+    "trackSubmit",
+    "trackClick",
+    "trackLink",
+    "trackForm",
+    "pageview",
+    "identify",
+    "reset",
+    "group",
+    "track",
+    "ready",
+    "alias",
+    "debug",
+    "page",
+    "once",
+    "off",
+    "on"
+  ];
 
-    analytics.factory = function(t) {
-        return function() {
-            var e = Array.prototype.slice.call(arguments);
-            e.unshift(t);
-            analytics.push(e);
-            // call callback
-            if (typeof e[e.length - 1] === 'function') {
-              e[e.length - 1]();
-            }
-            return analytics;
-        };
+  // Define a factory to create stubs. These are placeholders
+  // for methods in Analytics.js so that you never have to wait
+  // for it to load to actually record data. The `method` is
+  // stored as the first argument, so we can replay the data.
+  analytics.factory = function(method) {
+    return function() {
+      var args = Array.prototype.slice.call(arguments);
+      args.unshift(method);
+      analytics.push(args);
+      return analytics;
     };
+  };
 
-    for (var t = 0; t < analytics.methods.length; t++) {
-        var e = analytics.methods[t];
-        analytics[e] = analytics.factory(e);
-    }
+  // For each of our methods, generate a queueing stub.
+  for (var i = 0; i < analytics.methods.length; i++) {
+    var key = analytics.methods[i];
+    analytics[key] = analytics.factory(key);
+  }
 
-    analytics.load = function(t) {
-        var e = document.createElement('script');
-        e.type = 'text/javascript';
-        e.async = true;
-        e.src = 'https://cdn.segment.com/analytics.js/v1/' + t + '/analytics.min.js';
-        var n = document.getElementsByTagName('script')[0];
-        n.parentNode.insertBefore(e, n);
-    };
+  // Define a method to load Analytics.js from our CDN,
+  // and that will be sure to only ever load it once.
+  analytics.load = function(key) {
+    // Create an async script element based on your key.
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.async = true;
+    script.src = "https://" + "cdn.segment.com/analytics.js/v1/" + key +
+      "/analytics.min.js";
 
-    analytics.SNIPPET_VERSION = '3.1.0';
-    analytics.load(apiToken);
-    analytics.page();
-    return analytics;
+    // Insert our script next to the first script element.
+    var first = document.getElementsByTagName("script")[(0)];
+    first.parentNode.insertBefore(script, first);
+  };
+
+  // Add a version to keep track of what's in the wild.
+  analytics.SNIPPET_VERSION = "4.0.0";
+
+  // Load Analytics.js with your key, which will automatically
+  // load the tools you've enabled for your account. Boosh!
+  analytics.load(writeKey);
+
+  // Make the first page call to load the integrations. If
+  // you'd like to manually name or tag the page, edit or
+  // move this call however you'd like.
+  analytics.page();
+  return analytics;
 }
 
 module.exports = segmentioInsert;
